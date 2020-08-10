@@ -10,11 +10,12 @@ namespace CPL.src.core
     {
         private string buf = "";
         private char ch;
-        private enum States { S, SYMB, NUM, DEL, LST };
+        private enum States { S, SYMB, NUM, DEL, LETT, ID };
         private States state;
         private string[] Words = { "program", "var", "int", "real", "bool", "begin", "end", "if", "then", "else", "while", "do", "read", "write", "true", "false" };
-        private char[] Delimiter = { '.', ';', ',', ':', '=', '(', ')', '+', '-', '*', '/', '=', '>', '<' };
-        
+        private string[] Delimiter = { ".", ";", ",", ":", "=", "(", ")", "+", "-", "*", "/", "=", ">", "<" };
+        List<Lex> Lexemes = new List<Lex>();
+
 
         private void GetNext(char symb)
         {
@@ -52,17 +53,51 @@ namespace CPL.src.core
             }
         }
 
-        private void AddLex(string[] lexes, string val)
+        private void AddLex(List<Lex> lexes, int key, int val)
         {
-            Array.Resize(ref lexes, lexes.Length + 1);
-            lexes[lexes.Length - 1] = val;
+            lexes.Add(new Lex(key, val));
         }
 
         public void Analysis(string text)
         {
             foreach(char sm in text)
             {
-                
+                switch (state)
+                {
+                    case States.S:
+                        //if(sm == ' ' || sm == '\n' || sm == '\t')
+                        if (Char.IsLetter(sm))
+                        {
+                            ClearBuf();
+                            AddBuf(sm);
+                            state = States.LETT;
+                            continue;
+                        }
+
+                            
+                        break;
+                    case States.ID:
+                        if (Char.IsLetterOrDigit(sm))
+                        {
+                            AddBuf(sm);
+                            continue;
+                        }
+                        else
+                        {
+                            var srch = SerchLex(Words);
+                            if (srch != 0)
+                            {
+                                AddLex(Lexemes, 1, srch);
+                                state = States.S;
+                            }
+                            else
+                            {
+
+                            }
+                                
+                        }
+                        break;
+                }
             }
 
         }
