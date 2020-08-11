@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,15 @@ namespace CPL.src.core
     {
         private string buf = "";
         private char ch;
-        private enum States { S, SYMB, NUM, DEL, LETT, ID };
+        private int dt = 0;
+        private enum States { S, SYMB, NUM, DLM, FIN, ID, ER, ASGN, COM};
         private States state;
         private string[] Words = { "program", "var", "int", "real", "bool", "begin", "end", "if", "then", "else", "while", "do", "read", "write", "true", "false" };
         private string[] Delimiter = { ".", ";", ",", ":", "=", "(", ")", "+", "-", "*", "/", "=", ">", "<" };
         List<Lex> Lexemes = new List<Lex>();
+        private string[] TID;
+        private string[] TNUM;
+        private string[] TD;
 
 
         private void GetNext(char symb)
@@ -70,10 +75,34 @@ namespace CPL.src.core
                         {
                             ClearBuf();
                             AddBuf(sm);
-                            state = States.LETT;
+                            state = States.ID;
                             continue;
                         }
-
+                        else if (char.IsDigit(sm))
+                        {
+                            dt = (int)sm;
+                            state = States.NUM;
+                            continue;
+                        }
+                        else if (sm == '{')
+                        {
+                            state = States.COM;
+                            continue;
+                        }
+                        else if (sm == ':')
+                        {
+                            state = States.ASGN;
+                            continue;
+                        }
+                        else if(sm == '.')
+                        {
+                            AddLex(Lexemes, 2, 0);
+                            state = States.FIN;
+                        }
+                        else
+                        {
+                            state = States.DLM;
+                        }
                             
                         break;
                     case States.ID:
@@ -86,16 +115,49 @@ namespace CPL.src.core
                         {
                             var srch = SerchLex(Words);
                             if (srch != 0)
-                            {
                                 AddLex(Lexemes, 1, srch);
-                                state = States.S;
-                            }
                             else
                             {
-
+                                var j = PushLex(TID);
+                                AddLex(Lexemes, 4, j);
                             }
-                                
+                            state = States.S;
                         }
+                        break;
+
+                    case States.NUM:
+                        if (Char.IsDigit(sm))
+                        {
+                            dt = dt * 10 + (int)sm;
+                            continue;
+                        }
+                        else
+                        {
+                            var j = PushLex(TNUM);
+                            AddLex(Lexemes, 3, j);
+                            state = States.S;
+                        }
+                        break;
+                    case States.DLM:
+                        ClearBuf();
+                        AddBuf(sm);
+                        var r = SerchLex(TD);
+                        if (r != 0)
+                        {
+                            AddLex(Lexemes, 2, r);
+                            state = States.S;
+                            continue;
+                        }
+                        else
+                            state = States.ER;
+                        break;
+                    case States.ASGN:
+                        if (sm == '=')
+                            AddLex(Lexemes, 2, 4);
+                        else
+                            AddLex(Lexemes, 2, 3);
+                        state = States.S;
+                        
                         break;
                 }
             }
