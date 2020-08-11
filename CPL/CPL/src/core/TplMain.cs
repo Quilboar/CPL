@@ -16,10 +16,10 @@ namespace CPL.src.core
         private States state;
         private string[] Words = { "program", "var", "int", "real", "bool", "begin", "end", "if", "then", "else", "while", "do", "read", "write", "true", "false" };
         private string[] Delimiter = { ".", ";", ",", ":", "=", "(", ")", "+", "-", "*", "/", "=", ">", "<" };
-        List<Lex> Lexemes = new List<Lex>();
-        private string[] TID;
-        private string[] TNUM;
-        private string[] TD;
+        public List<Lex> Lexemes = new List<Lex>();
+        public string[] TID = { "" };
+        public string[] TNUM = { "" };
+        public string[] TD = { "" };
 
 
         private void GetNext(char symb)
@@ -37,30 +37,30 @@ namespace CPL.src.core
             buf += symb;
         }
 
-        private int SerchLex(string[] lexes)
+        private (int, string) SerchLex(string[] lexes)
         {
             var srh = lexes.AsEnumerable().Where(x => x == buf).ToString();
             if (srh != "")
-                return Array.IndexOf(lexes, srh);
-            else return 0;
+                return (Array.IndexOf(lexes, srh), buf);
+            else return (0, "");
         }
 
-        private int PushLex(string[] lexes)
+        private (int, string) PushLex(string[] lexes)
         {
             var srh = lexes.AsEnumerable().Where(x => x == buf).ToString();
             if (srh != "")
-                return 0;
+                return (0, "");
             else
             {
                 Array.Resize(ref lexes, lexes.Length + 1);
                 lexes[lexes.Length - 1] = srh;
-                return lexes.Length - 1;
+                return (lexes.Length - 1, srh);
             }
         }
 
-        private void AddLex(List<Lex> lexes, int key, int val)
+        private void AddLex(List<Lex> lexes, int key, int val, string lex)
         {
-            lexes.Add(new Lex(key, val));
+            lexes.Add(new Lex(key, val, lex));
         }
 
         public void Analysis(string text)
@@ -96,7 +96,7 @@ namespace CPL.src.core
                         }
                         else if(sm == '.')
                         {
-                            AddLex(Lexemes, 2, 0);
+                            AddLex(Lexemes, 2, 0, sm.ToString());
                             state = States.FIN;
                         }
                         else
@@ -114,12 +114,12 @@ namespace CPL.src.core
                         else
                         {
                             var srch = SerchLex(Words);
-                            if (srch != 0)
-                                AddLex(Lexemes, 1, srch);
+                            if (srch.Item1 != 0)
+                                AddLex(Lexemes, 1, srch.Item1, srch.Item2);
                             else
                             {
                                 var j = PushLex(TID);
-                                AddLex(Lexemes, 4, j);
+                                AddLex(Lexemes, 4, j.Item1, j.Item2);
                             }
                             state = States.S;
                         }
@@ -134,7 +134,7 @@ namespace CPL.src.core
                         else
                         {
                             var j = PushLex(TNUM);
-                            AddLex(Lexemes, 3, j);
+                            AddLex(Lexemes, 3, j.Item1, j.Item2);
                             state = States.S;
                         }
                         break;
@@ -142,9 +142,9 @@ namespace CPL.src.core
                         ClearBuf();
                         AddBuf(sm);
                         var r = SerchLex(TD);
-                        if (r != 0)
+                        if (r.Item1 != 0)
                         {
-                            AddLex(Lexemes, 2, r);
+                            AddLex(Lexemes, 2, r.Item1, r.Item2);
                             state = States.S;
                             continue;
                         }
@@ -153,9 +153,9 @@ namespace CPL.src.core
                         break;
                     case States.ASGN:
                         if (sm == '=')
-                            AddLex(Lexemes, 2, 4);
+                            AddLex(Lexemes, 2, 4, sm.ToString());
                         else
-                            AddLex(Lexemes, 2, 3);
+                            AddLex(Lexemes, 2, 3, sm.ToString());
                         state = States.S;
                         
                         break;

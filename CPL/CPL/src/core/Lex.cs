@@ -8,13 +8,15 @@ namespace CPL.src.core
 {
     class Lex
     {
-        private int id;
-        private int lex;
+        public int id;
+        public int lex;
+        public string val;
 
-        public Lex(int _id, int _lex)
+        public Lex(int _id, int _lex, string _val)
         {
             id = _id;
             lex = _lex;
+            val = _val;
         }
     }
 }
