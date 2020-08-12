@@ -27,10 +27,27 @@ namespace CPL
         {
             TplMain tpl = new TplMain();
             tpl.Analysis(textBox1.Text);
+            
             foreach(var lex in tpl.Lexemes)
             {
-                textBox2.Text += "id: " + lex.id + " lex: " + lex.lex + " val: " + lex.val + Environment.NewLine; 
+                switch (lex.id)
+                {
+                    case 1:
+                        textBox2.Text += "id: " + lex.id + " lex: " + lex.lex + " val: " + lex.val + " |" + " служебные слова "+ Environment.NewLine;
+                        break;
+                    case 2:
+                        textBox2.Text += "id: " + lex.id + " lex: " + lex.lex + " val: " + lex.val + " |" + " ограничители " + Environment.NewLine;
+                        break;
+                    case 3:
+                        textBox2.Text += "id: " + lex.id + " lex: " + lex.lex + " val: " + lex.val + " |" + " числа " + Environment.NewLine;
+                        break;
+                    case 4:
+                        textBox2.Text += "id: " + lex.id + " lex: " + lex.lex + " val: " + lex.val + " |" + " идентификатор " + Environment.NewLine;
+                        break;
+                }
+                
             }
+            MessageBox.Show("");
         }
     }
 }
