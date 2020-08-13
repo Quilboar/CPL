@@ -11,18 +11,17 @@ namespace CPL.src.core
 {
     class TplMain
     {
-        private string buf = "";
+        private string buf = ""; // буфер для хранения лексемы
         private char[] sm = new char[1];
         private int dt = 0;
-        private enum States { S, NUM, DLM, FIN, ID, ER, ASGN, COM };
-        private States state;
+        private enum States { S, NUM, DLM, FIN, ID, ER, ASGN, COM } // состояния state-машины
+        private States state; // хранит текущее состояние
         private string[] Words = { "program", "var", "integer", "real", "bool", "begin", "end", "if", "then", "else", "while", "do", "read", "write", "true", "false" };
         private string[] Delimiter = { ".", ";", ",", "(", ")", "+", "-", "*", "/", "=", ">", "<" };
         public List<Lex> Lexemes = new List<Lex>();
         public string[] TID = { "" };
         public string[] TNUM = { "" };
-       
-        StringReader sr;
+        private StringReader sr; // позволяет посимвольно считывать строку
 
         private void GetNext()
         {

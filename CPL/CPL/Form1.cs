@@ -46,12 +46,8 @@ namespace CPL
                         textBox2.Text += "id: " + lex.id + " lex: " + lex.lex + " val: " + lex.val + " |" + " идентификатор " + Environment.NewLine;
                         break;
                         
-                }
-                
-
-               
-            }
-           
+                }     
+            }       
         }
     }
 }
