@@ -21,7 +21,7 @@ namespace CPL.src.core
         public List<Lex> Lexemes = new List<Lex>();
         public string[] TID = { "" };
         public string[] TNUM = { "" };
-        public string[] TD = { "" };
+       
         StringReader sr;
 
         private void GetNext()
@@ -43,14 +43,11 @@ namespace CPL.src.core
         {
             var srh = Array.FindIndex(lexes, s => s.Equals(buf)); 
             if (srh != -1)
-            {
-                return (srh, buf);
-            }
-               
+                return (srh, buf);             
             else return (-1, "");
         }
 
-        private (int, string) PushLex(string[] lexes)
+        private (int, string) PushLex(string[] lexes, string buf)
         {
             var srh = Array.FindIndex(lexes, s => s.Equals(buf));
             if (srh != -1)
@@ -71,12 +68,6 @@ namespace CPL.src.core
         public void Analysis(string text)
         {
             sr = new StringReader(text);
-
-            //if (sm[0] == '+')
-            //{
-            //    MessageBox.Show("");
-            //}
-            //MessageBox.Show(buf);
             while (state != States.FIN)
             {
                 switch (state)
@@ -94,7 +85,7 @@ namespace CPL.src.core
                         }
                         else if (char.IsDigit(sm[0]))
                         {
-                            dt = (int)sm[0];
+                            dt = (int)(sm[0]-'0');
                             GetNext();
                             state = States.NUM;
                             
@@ -136,7 +127,7 @@ namespace CPL.src.core
                                 AddLex(Lexemes, 1, srch.Item1, srch.Item2);
                             else
                             {
-                                var j = PushLex(TID);
+                                var j = PushLex(TID, buf);
                                 AddLex(Lexemes, 4, j.Item1, j.Item2);
                             }
                             state = States.S;
@@ -146,19 +137,18 @@ namespace CPL.src.core
                     case States.NUM:
                         if (Char.IsDigit(sm[0]))
                         {
-                            dt = dt * 10 + (int)sm[0];
+                            dt = dt * 10 + (int)(sm[0]-'0');
                             GetNext();
                         }
                         else
                         {
-                            var j = PushLex(TNUM);
+
+                            var j = PushLex(TNUM, dt.ToString());
                             AddLex(Lexemes, 3, j.Item1, j.Item2);
                             state = States.S;
                         }
                         break;
                     case States.DLM:
-                        //if (sm[0] == ',')
-                        //    MessageBox.Show();
                         ClearBuf();
                         AddBuf(sm[0]);
                        
@@ -186,7 +176,8 @@ namespace CPL.src.core
 
                         break;
                     case States.ER:
-                        MessageBox.Show("Error");
+                        MessageBox.Show("Ошибка в программе");
+                        state = States.FIN;
                         break;
                     case States.FIN:
                         MessageBox.Show("Лексический анализ закончен");

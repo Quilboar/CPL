@@ -25,6 +25,7 @@ namespace CPL
 
         private void button1_Click(object sender, EventArgs e)
         {
+            textBox2.Clear();
             TplMain tpl = new TplMain();
             tpl.Analysis(textBox1.Text);
             
@@ -45,9 +46,10 @@ namespace CPL
                         textBox2.Text += "id: " + lex.id + " lex: " + lex.lex + " val: " + lex.val + " |" + " идентификатор " + Environment.NewLine;
                         break;
                 }
-                
+
+               
             }
-            MessageBox.Show("");
+           
         }
     }
 }
