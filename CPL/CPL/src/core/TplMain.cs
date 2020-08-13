@@ -14,10 +14,10 @@ namespace CPL.src.core
         private string buf = "";
         private char[] sm = new char[1];
         private int dt = 0;
-        private enum States { S, SYMB, NUM, DLM, FIN, ID, ER, ASGN, COM };
+        private enum States { S, NUM, DLM, FIN, ID, ER, ASGN, COM };
         private States state;
         private string[] Words = { "program", "var", "integer", "real", "bool", "begin", "end", "if", "then", "else", "while", "do", "read", "write", "true", "false" };
-        private string[] Delimiter = { ".", ";", ",", ":=", "(", ")", "+", "-", "*", "/", "=", ">", "<" };
+        private string[] Delimiter = { ".", ";", ",", "(", ")", "+", "-", "*", "/", "=", ">", "<" };
         public List<Lex> Lexemes = new List<Lex>();
         public string[] TID = { "" };
         public string[] TNUM = { "" };
