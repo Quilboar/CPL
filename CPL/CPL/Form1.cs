@@ -26,7 +26,7 @@ namespace CPL
         private void button1_Click(object sender, EventArgs e)
         {
             textBox2.Clear();
-            TplMain tpl = new TplMain();
+            Lexic tpl = new Lexic();
             tpl.Analysis(textBox1.Text);
             
             foreach(var lex in tpl.Lexemes)

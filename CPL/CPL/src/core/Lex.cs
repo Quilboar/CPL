@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPL.src.core
 {
-    class Lex
+    public class Lex
     {
         public int id;
         public int lex;

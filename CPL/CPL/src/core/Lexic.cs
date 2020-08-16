@@ -9,15 +9,16 @@ using System.Windows.Forms;
 
 namespace CPL.src.core
 {
-    class TplMain
+    class Lexic 
     {
         private string buf = ""; // буфер для хранения лексемы
         private char[] sm = new char[1];
+        private string[] Words = { "program", "var", "integer", "real", "bool", "begin", "end", "if", "then", "else", "while", "do", "read", "write", "true", "false" };
+        private string[] Delimiter = { ".", ";", ",", "(", ")", "+", "-", "*", "/", "=", ">", "<" };
         private int dt = 0;
         private enum States { S, NUM, DLM, FIN, ID, ER, ASGN, COM } // состояния state-машины
         private States state; // хранит текущее состояние
-        private string[] Words = { "program", "var", "integer", "real", "bool", "begin", "end", "if", "then", "else", "while", "do", "read", "write", "true", "false" };
-        private string[] Delimiter = { ".", ";", ",", "(", ")", "+", "-", "*", "/", "=", ">", "<" };
+        
         public List<Lex> Lexemes = new List<Lex>();
         public string[] TID = { "" };
         public string[] TNUM = { "" };
@@ -40,9 +41,9 @@ namespace CPL.src.core
 
         private (int, string) SerchLex(string[] lexes)
         {
-            var srh = Array.FindIndex(lexes, s => s.Equals(buf)); 
+            var srh = Array.FindIndex(lexes, s => s.Equals(buf));
             if (srh != -1)
-                return (srh, buf);             
+                return (srh, buf);
             else return (-1, "");
         }
 
@@ -73,7 +74,7 @@ namespace CPL.src.core
                 {
 
                     case States.S:
-                        if (sm[0] == ' ' || sm[0] == '\n' || sm[0] == '\t' || sm[0] == '\0' || sm[0] == '\r' )
+                        if (sm[0] == ' ' || sm[0] == '\n' || sm[0] == '\t' || sm[0] == '\0' || sm[0] == '\r')
                             GetNext();
                         else if (Char.IsLetter(sm[0]))
                         {
@@ -84,10 +85,10 @@ namespace CPL.src.core
                         }
                         else if (char.IsDigit(sm[0]))
                         {
-                            dt = (int)(sm[0]-'0');
+                            dt = (int)(sm[0] - '0');
                             GetNext();
                             state = States.NUM;
-                            
+
                         }
                         else if (sm[0] == '{')
                         {
@@ -136,7 +137,7 @@ namespace CPL.src.core
                     case States.NUM:
                         if (Char.IsDigit(sm[0]))
                         {
-                            dt = dt * 10 + (int)(sm[0]-'0');
+                            dt = dt * 10 + (int)(sm[0] - '0');
                             GetNext();
                         }
                         else
@@ -150,7 +151,7 @@ namespace CPL.src.core
                     case States.DLM:
                         ClearBuf();
                         AddBuf(sm[0]);
-                       
+
                         var r = SerchLex(Delimiter);
                         if (r.Item1 != -1)
                         {
@@ -182,9 +183,9 @@ namespace CPL.src.core
                         MessageBox.Show("Лексический анализ закончен");
                         break;
                 }
-               
+
             }
-            
+
 
 
         }
