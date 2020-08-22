@@ -39,7 +39,7 @@ namespace CPL.src.core
             buf += symb;
         }
 
-        private (int, string) SerchLex(string[] lexes)
+        private (int, string) SearchLex(string[] lexes)
         {
             var srh = Array.FindIndex(lexes, s => s.Equals(buf));
             if (srh != -1)
@@ -122,7 +122,7 @@ namespace CPL.src.core
                         }
                         else
                         {
-                            var srch = SerchLex(Words);
+                            var srch = SearchLex(Words);
                             if (srch.Item1 != -1)
                                 AddLex(Lexemes, 1, srch.Item1, srch.Item2);
                             else
@@ -152,7 +152,7 @@ namespace CPL.src.core
                         ClearBuf();
                         AddBuf(sm[0]);
 
-                        var r = SerchLex(Delimiter);
+                        var r = SearchLex(Delimiter);
                         if (r.Item1 != -1)
                         {
                             AddLex(Lexemes, 2, r.Item1, r.Item2);

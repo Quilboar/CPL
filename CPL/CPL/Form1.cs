@@ -28,26 +28,43 @@ namespace CPL
             textBox2.Clear();
             Lexic tpl = new Lexic();
             tpl.Analysis(textBox1.Text);
-            
+
+            var result = new StringBuilder();
+
             foreach(var lex in tpl.Lexemes)
             {
+                string lexName = null;
+
                 switch (lex.id)
                 {
                     case 1:
-                        textBox2.Text += "id: " + lex.id + " lex: " + lex.lex + " val: " + lex.val + " |" + " служебные слова "+ Environment.NewLine;
+                        lexName = " служебные слова ";
                         break;
                     case 2:
-                        textBox2.Text += "id: " + lex.id + " lex: " + lex.lex + " val: " + lex.val + " |" + " ограничители " + Environment.NewLine;
+                        lexName = " ограничители ";
                         break;
                     case 3:
-                        textBox2.Text += "id: " + lex.id + " lex: " + lex.lex + " val: " + lex.val + " |" + " числа " + Environment.NewLine;
+                        lexName = " числа ";
                         break;
                     case 4:
-                        textBox2.Text += "id: " + lex.id + " lex: " + lex.lex + " val: " + lex.val + " |" + " идентификатор " + Environment.NewLine;
+                        lexName = " идентификатор ";
                         break;
-                        
-                }     
-            }       
+                }
+
+                if (lexName != null)
+                {
+                    result.Append("id: ");
+                    result.Append(lex.id);
+                    result.Append(" lex: ");
+                    result.Append(lex.lex);
+                    result.Append(" val: ");
+                    result.Append(lex.val);
+                    result.Append(" |");
+                    result.AppendLine(lexName);
+                }
+            }
+
+            textBox2.Text = result.ToString();
         }
     }
 }

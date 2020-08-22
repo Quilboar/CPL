@@ -13,6 +13,7 @@ namespace CPL.src.core
         private char[] sm = new char[1];
         private StringReader sr;
         public List<Lex> lexemes;
+
         private Lex lex;
         public Syntax(List<Lex> _lexemes)
         {
@@ -28,8 +29,9 @@ namespace CPL.src.core
         {
             for(int i = 0; i < lexemes.Count; i++)
             {
-                if (lexemes[i].val != "program")
+                if (lexemes[0].val != "program")
                     SE();
+               
 
             }
         }
