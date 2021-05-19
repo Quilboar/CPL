@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CPL.src.core;
 
 namespace CPL
 {
@@ -25,7 +24,7 @@ namespace CPL
 
         private void button1_Click(object sender, EventArgs e)
         {
-            textBox2.Clear();
+            /*textBox2.Clear();
             Lexic tpl = new Lexic();
             tpl.Analysis(textBox1.Text);
 
@@ -64,7 +63,7 @@ namespace CPL
                 }
             }
 
-            textBox2.Text = result.ToString();
+            textBox2.Text = result.ToString();*/
         }
     }
 }
