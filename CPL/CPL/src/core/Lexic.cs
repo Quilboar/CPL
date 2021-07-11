@@ -17,11 +17,11 @@ namespace CPL.src.core
         private string[] Delimiter = { ".", ";", ",", "(", ")", "+", "-", "*", "/", "=", ">", "<" };
         private int dt = 0;
         private enum States { S, NUM, DLM, FIN, ID, ER, ASGN, COM } // состояния state-машины
-        private States state; // хранит текущее состояние
+        private States _state; // хранит текущее состояние
         
-        public List<Lex> Lexemes = new List<Lex>();
-        public string[] TID = { "" };
-        public string[] TNUM = { "" };
+        public readonly List<Lex> Lexemes = new List<Lex>();
+        private string[] TID = { "" };
+        private string[] TNUM = { "" };
         private StringReader sr; // позволяет посимвольно считывать строку
 
         private void GetNext()
@@ -44,7 +44,7 @@ namespace CPL.src.core
             var srh = Array.FindIndex(lexes, s => s.Equals(buf));
             if (srh != -1)
                 return (srh, buf);
-            else return (-1, "");
+            return (-1, "");
         }
 
         private (int, string) PushLex(string[] lexes, string buf)
@@ -52,12 +52,9 @@ namespace CPL.src.core
             var srh = Array.FindIndex(lexes, s => s.Equals(buf));
             if (srh != -1)
                 return (-1, "");
-            else
-            {
-                Array.Resize(ref lexes, lexes.Length + 1);
-                lexes[lexes.Length - 1] = buf;
-                return (lexes.Length - 1, buf);
-            }
+            Array.Resize(ref lexes, lexes.Length + 1);
+            lexes[lexes.Length - 1] = buf;
+            return (lexes.Length - 1, buf);
         }
 
         private void AddLex(List<Lex> lexes, int key, int val, string lex)
@@ -68,9 +65,9 @@ namespace CPL.src.core
         public void Analysis(string text)
         {
             sr = new StringReader(text);
-            while (state != States.FIN)
+            while (_state != States.FIN)
             {
-                switch (state)
+                switch (_state)
                 {
 
                     case States.S:
@@ -80,24 +77,24 @@ namespace CPL.src.core
                         {
                             ClearBuf();
                             AddBuf(sm[0]);
-                            state = States.ID;
+                            _state = States.ID;
                             GetNext();
                         }
                         else if (char.IsDigit(sm[0]))
                         {
                             dt = (int)(sm[0] - '0');
                             GetNext();
-                            state = States.NUM;
+                            _state = States.NUM;
 
                         }
                         else if (sm[0] == '{')
                         {
-                            state = States.COM;
+                            _state = States.COM;
                             GetNext();
                         }
                         else if (sm[0] == ':')
                         {
-                            state = States.ASGN;
+                            _state = States.ASGN;
                             ClearBuf();
                             AddBuf(sm[0]);
                             GetNext();
@@ -105,11 +102,11 @@ namespace CPL.src.core
                         else if (sm[0] == '.')
                         {
                             AddLex(Lexemes, 2, 0, sm[0].ToString());
-                            state = States.FIN;
+                            _state = States.FIN;
                         }
                         else
                         {
-                            state = States.DLM;
+                            _state = States.DLM;
 
                         }
 
@@ -130,7 +127,7 @@ namespace CPL.src.core
                                 var j = PushLex(TID, buf);
                                 AddLex(Lexemes, 4, j.Item1, j.Item2);
                             }
-                            state = States.S;
+                            _state = States.S;
                         }
                         break;
 
@@ -145,7 +142,7 @@ namespace CPL.src.core
 
                             var j = PushLex(TNUM, dt.ToString());
                             AddLex(Lexemes, 3, j.Item1, j.Item2);
-                            state = States.S;
+                            _state = States.S;
                         }
                         break;
                     case States.DLM:
@@ -156,11 +153,11 @@ namespace CPL.src.core
                         if (r.Item1 != -1)
                         {
                             AddLex(Lexemes, 2, r.Item1, r.Item2);
-                            state = States.S;
+                            _state = States.S;
                             GetNext();
                         }
                         else
-                            state = States.ER;
+                            _state = States.ER;
                         break;
                     case States.ASGN:
                         if (sm[0] == '=')
@@ -172,12 +169,12 @@ namespace CPL.src.core
                         }
                         else
                             AddLex(Lexemes, 2, 3, buf);
-                        state = States.S;
+                        _state = States.S;
 
                         break;
                     case States.ER:
                         MessageBox.Show("Ошибка в программе");
-                        state = States.FIN;
+                        _state = States.FIN;
                         break;
                     case States.FIN:
                         MessageBox.Show("Лексический анализ закончен");
