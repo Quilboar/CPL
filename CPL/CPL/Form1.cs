@@ -35,7 +35,7 @@ namespace CPL
             {
                 string lexName = null;
 
-                switch (lex.id)
+                switch (lex.Id)
                 {
                     case 1:
                         lexName = " служебные слова ";
@@ -54,11 +54,11 @@ namespace CPL
                 if (lexName != null)
                 {
                     result.Append("id: ");
-                    result.Append(lex.id);
+                    result.Append(lex.Id);
                     result.Append(" lex: ");
-                    result.Append(lex.lex);
+                    result.Append(lex.Lexeme);
                     result.Append(" val: ");
-                    result.Append(lex.val);
+                    result.Append(lex.Value);
                     result.Append(" |");
                     result.AppendLine(lexName);
                 }

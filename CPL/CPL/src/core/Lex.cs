@@ -8,15 +8,15 @@ namespace CPL.src.core
 {
     public class Lex
     {
-        public readonly int id;
-        public readonly int lex;
-        public readonly string val;
+        public readonly int Id;
+        public readonly int Lexeme;
+        public readonly string Value;
 
-        public Lex(int id, int lex, string val)
+        public Lex(int id, int lexeme, string value)
         {
-            this.id = id;
-            this.lex = lex;
-            this.val = val;
+            this.Id = id;
+            this.Lexeme = lexeme;
+            this.Value = value;
         }
     }
 }

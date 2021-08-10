@@ -34,27 +34,27 @@ namespace CPL.src.core
             buf = "";
         }
 
-        private void AddBuf(char symb)
+        private void AddBuf(char symbol)
         {
-            buf += symb;
+            buf += symbol;
         }
 
-        private (int, string) SearchLex(string[] lexes)
+        private (int, string) SearchLex(string[] lexemes)
         {
-            var srh = Array.FindIndex(lexes, s => s.Equals(buf));
+            var srh = Array.FindIndex(lexemes, s => s.Equals(buf));
             if (srh != -1)
                 return (srh, buf);
             return (-1, "");
         }
 
-        private (int, string) PushLex(string[] lexes, string buf)
+        private (int, string) PushLex(string[] lexemes, string buf)
         {
-            var srh = Array.FindIndex(lexes, s => s.Equals(buf));
+            var srh = Array.FindIndex(lexemes, s => s.Equals(buf));
             if (srh != -1)
                 return (-1, "");
-            Array.Resize(ref lexes, lexes.Length + 1);
-            lexes[lexes.Length - 1] = buf;
-            return (lexes.Length - 1, buf);
+            Array.Resize(ref lexemes, lexemes.Length + 1);
+            lexemes[lexemes.Length - 1] = buf;
+            return (lexemes.Length - 1, buf);
         }
 
         private void AddLex(List<Lex> lexes, int key, int val, string lex)
@@ -182,9 +182,6 @@ namespace CPL.src.core
                 }
 
             }
-
-
-
         }
     }
 }
